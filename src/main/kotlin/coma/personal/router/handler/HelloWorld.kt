@@ -1,4 +1,4 @@
-package handler
+package coma.personal.router.handler
 
 import io.muserver.MuHandler
 import io.muserver.MuRequest

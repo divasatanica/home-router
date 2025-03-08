@@ -1,5 +1,5 @@
-import handler.AppWithConnectors
-import handler.ConnectorsHandler
+import coma.personal.router.handler.AppWithConnectors
+import coma.personal.router.handler.ConnectorsHandler
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.util.concurrent.ScheduledThreadPoolExecutor
@@ -12,18 +12,17 @@ class RegistrationLoader {
         logger.info("Scheduler started")
         loadRegistrationToMemory()
         executor.scheduleWithFixedDelay({
-            logger.info("Loading registration data to memory")
             loadRegistrationToMemory()
-        }, 0, 20, java.util.concurrent.TimeUnit.SECONDS)
-    }
-
-    fun getRegistration(): List<AppWithConnectors> {
-        return registrationData
+        }, 0, 60, java.util.concurrent.TimeUnit.SECONDS)
     }
 
     fun findAddress(appName: String): List<String> {
         val data = registrationData.find { it.appName == appName }
         return data?.connectors?.map { it.address } ?: listOf()
+    }
+
+    fun refresh() {
+        loadRegistrationToMemory()
     }
 
     private fun loadRegistrationToMemory() {

@@ -1,7 +1,7 @@
-package handler
+package coma.personal.router.handler
 
 import com.google.gson.Gson
-import database.data.schema.Connectors
+import coma.personal.router.database.data.schema.Connectors
 import io.muserver.MuRequest
 import io.muserver.MuResponse
 import io.muserver.RouteHandler

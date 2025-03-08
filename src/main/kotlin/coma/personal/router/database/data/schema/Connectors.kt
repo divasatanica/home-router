@@ -1,4 +1,4 @@
-package database.data.schema
+package coma.personal.router.database.data.schema
 
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp

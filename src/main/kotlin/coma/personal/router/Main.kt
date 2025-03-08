@@ -1,5 +1,5 @@
-import database.DBManager
-import handler.*
+import coma.personal.router.database.DBManager
+import coma.personal.router.handler.*
 import io.muserver.Method
 import io.muserver.MuServerBuilder
 import org.slf4j.Logger
@@ -19,6 +19,7 @@ class App {
         val port = listener.address().port
         val client = okhttp3.OkHttpClient().newBuilder().readTimeout(60, java.util.concurrent.TimeUnit.SECONDS).build()
 
+        logger.info("Classpath: ${System.getProperty("java.class.path")}")
         DBManager.init(env)
         val registrationLoader = RegistrationLoader()
         registrationLoader.start()
@@ -26,7 +27,8 @@ class App {
             .addHandler(TraceContext())
             .addHandler(LogMiddleware())
             .addHandler(HelloWorld())
-            .addHandler(Method.POST, "/api/v1/register", RegisterHandler())
+            .addHandler(Method.POST, "/api/v1/register", RegisterHandler(registrationLoader))
+            .addHandler(Method.POST, "/api/v1/unregister", UnregisterHandler(registrationLoader))
             .addHandler(Method.GET, "/api/v1/connectors", ConnectorsHandler())
             .addHandler(HttpProxyHandler(registrationLoader, client))
 

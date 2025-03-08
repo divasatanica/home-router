@@ -1,6 +1,7 @@
-package handler
+package coma.personal.router.handler
 
-import database.data.schema.Connectors
+import RegistrationLoader
+import coma.personal.router.database.data.schema.Connectors
 import io.muserver.MuRequest
 import io.muserver.MuResponse
 import io.muserver.RouteHandler
@@ -11,7 +12,9 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 data class RegistrationPayload(val appName: String, val address: String)
 
-class RegisterHandler: RouteHandler {
+class RegisterHandler(
+    private val registrationLoader: RegistrationLoader
+): RouteHandler {
     override fun handle(request: MuRequest, response: MuResponse, paramMap: MutableMap<String, String>?) {
         try {
             val body = request.readBodyAsString()
@@ -22,6 +25,8 @@ class RegisterHandler: RouteHandler {
                     it[address] = result.address
                     it[lastRegistered] = Instant.fromEpochMilliseconds(System.currentTimeMillis())
                 }
+
+                registrationLoader.refresh()
 
                 val responseResult = object {
                     val data = object {
