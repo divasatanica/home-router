@@ -1,3 +1,5 @@
+package coma.personal.router
+
 import coma.personal.router.database.DBManager
 import coma.personal.router.handler.*
 import io.muserver.Method
@@ -34,9 +36,4 @@ class App {
 
         logger.info("Server started on http://localhost:{}", port)
     }
-}
-
-fun main() {
-    val app = App()
-    app.start()
 }

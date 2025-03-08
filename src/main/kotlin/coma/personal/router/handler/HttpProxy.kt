@@ -1,6 +1,6 @@
 package coma.personal.router.handler
 
-import RegistrationLoader
+import coma.personal.router.RegistrationLoader
 import io.muserver.MuHandler
 import io.muserver.MuRequest
 import io.muserver.MuResponse

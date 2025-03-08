@@ -1,3 +1,5 @@
+package coma.personal.router
+
 import coma.personal.router.handler.AppWithConnectors
 import coma.personal.router.handler.ConnectorsHandler
 import org.slf4j.Logger
