@@ -19,5 +19,6 @@
     <orderEntry type="library" name="jetbrains.exposed.jdbc" level="project" />
     <orderEntry type="library" name="postgresql" level="project" />
     <orderEntry type="library" name="google.code.gson" level="project" />
+    <orderEntry type="library" name="squareup.okhttp3.mockwebserver" level="project" />
   </component>
 </module>

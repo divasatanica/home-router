@@ -1,12 +1,10 @@
 package database.data.schema
 
-import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 
 const val MAX_CHAR_LENGTH = 50
 
-@Serializable
 object Connectors: UUIDTable() {
     val appName = varchar("app_name", MAX_CHAR_LENGTH).nullable()
     val address = varchar("address", MAX_CHAR_LENGTH).nullable().uniqueIndex()

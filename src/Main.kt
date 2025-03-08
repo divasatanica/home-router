@@ -17,14 +17,18 @@ class App {
             .start()
 
         val port = listener.address().port
+        val client = okhttp3.OkHttpClient().newBuilder().readTimeout(60, java.util.concurrent.TimeUnit.SECONDS).build()
 
         DBManager.init(env)
+        val registrationLoader = RegistrationLoader()
+        registrationLoader.start()
         server
             .addHandler(TraceContext())
             .addHandler(LogMiddleware())
             .addHandler(HelloWorld())
             .addHandler(Method.POST, "/api/v1/register", RegisterHandler())
             .addHandler(Method.GET, "/api/v1/connectors", ConnectorsHandler())
+            .addHandler(HttpProxyHandler(registrationLoader, client))
 
         logger.info("Server started on http://localhost:{}", port)
     }
