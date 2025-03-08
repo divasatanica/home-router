@@ -1,2 +1,4 @@
+package handler
+
 class HttpProxyHandler {
 }

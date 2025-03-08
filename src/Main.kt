@@ -1,12 +1,15 @@
+import database.DBManager
+import handler.*
+import io.muserver.Method
 import io.muserver.MuServerBuilder
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 class App {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
-    fun start() {
-        val env = Env.make("development")
-        println(env.speak())
+    fun start(presetEnv: String = "production") {
+        val env = Env.make(presetEnv)
+        logger.info("Application now running on ${env.speak()}")
 
         val server = MuServerBuilder.muServer()
         val listener = server
@@ -14,18 +17,16 @@ class App {
             .start()
 
         val port = listener.address().port
-        logger.info("Server started on http://localhost:{}", port)
 
+        DBManager.init(env)
         server
             .addHandler(TraceContext())
             .addHandler(LogMiddleware())
-            .addHandler(
-                { req, res ->
-                    res.write("Hello world")
-                    true
-                }
-            )
+            .addHandler(HelloWorld())
+            .addHandler(Method.POST, "/api/v1/register", RegisterHandler())
+            .addHandler(Method.GET, "/api/v1/connectors", ConnectorsHandler())
 
+        logger.info("Server started on http://localhost:{}", port)
     }
 }
 

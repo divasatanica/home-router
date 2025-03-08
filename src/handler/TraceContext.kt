@@ -1,3 +1,5 @@
+package handler
+
 import io.muserver.MuHandler
 import io.muserver.MuRequest
 import io.muserver.MuResponse

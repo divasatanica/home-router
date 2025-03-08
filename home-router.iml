@@ -13,5 +13,11 @@
     <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
     <orderEntry type="library" name="io.muserver.mu.server" level="project" />
     <orderEntry type="library" name="slf4j.simple" level="project" />
+    <orderEntry type="library" name="jetbrains.exposed.kotlin.datetime" level="project" />
+    <orderEntry type="library" name="jetbrains.exposed.json" level="project" />
+    <orderEntry type="library" name="jetbrains.exposed.core" level="project" />
+    <orderEntry type="library" name="jetbrains.exposed.jdbc" level="project" />
+    <orderEntry type="library" name="postgresql" level="project" />
+    <orderEntry type="library" name="google.code.gson" level="project" />
   </component>
 </module>
