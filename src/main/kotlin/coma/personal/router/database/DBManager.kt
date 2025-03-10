@@ -22,8 +22,9 @@ class DBManager {
         private fun connect(env: Env): String {
             val userNameAndSecretCombination = env.loadFromSecret("postgres")
             val contentList = userNameAndSecretCombination.replace("\n", "").split("@")
+            val databaseHost = if (env.speak() == "development") "0.0.0.0:5432" else "host.docker.internal:5432"
 
-            val instance = Database.connect("jdbc:postgresql://0.0.0.0:5432/registration", driver = "org.postgresql.Driver", contentList[0], contentList[1])
+            val instance = Database.connect("jdbc:postgresql://$databaseHost/registration", driver = "org.postgresql.Driver", contentList[0], contentList[1])
 
             logger.info("Connected to ${instance.url}")
             return instance.url
