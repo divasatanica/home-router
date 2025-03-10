@@ -8,7 +8,7 @@ import io.muserver.RouteHandler
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
-data class ConnectorItem(val appName: String, val address: String, val lastRegistered: Long)
+data class ConnectorItem(val id: String, val appName: String, val address: String, val lastRegistered: Long)
 data class AppWithConnectors(val appName: String, val connectors: List<ConnectorItem>)
 
 class ConnectorsHandler: RouteHandler {
@@ -34,6 +34,7 @@ class ConnectorsHandler: RouteHandler {
                         val existedConnectors = appNameMap[appName]!!
                         existedConnectors.add(
                             ConnectorItem(
+                                id = it[Connectors.id].toString(),
                                 appName,
                                 it[Connectors.address]!!,
                                 it[Connectors.lastRegistered]!!.toEpochMilliseconds()
@@ -45,6 +46,7 @@ class ConnectorsHandler: RouteHandler {
 
                     appNameMap[appName] = mutableListOf(
                         ConnectorItem(
+                            id = it[Connectors.id].toString(),
                             appName,
                             it[Connectors.address]!!,
                             it[Connectors.lastRegistered]!!.toEpochMilliseconds()
