@@ -3,12 +3,14 @@ package coma.personal.router
 import coma.personal.router.database.data.schema.Connectors
 import coma.personal.router.handler.AppWithConnectors
 import coma.personal.router.handler.ConnectorsHandler
+import kotlinx.datetime.Instant
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
+import org.jetbrains.exposed.sql.update
 import java.util.UUID
 
 class RegistrationLoader {
@@ -25,12 +27,14 @@ class RegistrationLoader {
             }
         }
 
+        // Check and refresh health of connectors every 60 seconds
         executor.scheduleWithFixedDelay({
             loadRegistrationToMemory()
-        }, 0, 60, java.util.concurrent.TimeUnit.SECONDS)
+        }, 60, 60, java.util.concurrent.TimeUnit.SECONDS)
+        // Store latest activity of connectors every 2 minutes
         executor.scheduleWithFixedDelay({
-            checkHeartBeatSignal()
-        }, 0, 60, java.util.concurrent.TimeUnit.SECONDS)
+            persistConnectorsActivity()
+        }, 2 * 60, 2 * 60, java.util.concurrent.TimeUnit.SECONDS)
     }
 
     fun findAddress(appName: String): List<String> {
@@ -46,9 +50,28 @@ class RegistrationLoader {
         heartBeatMap[id] = System.currentTimeMillis()
     }
 
+    private fun persistConnectorsActivity() {
+        var updatedCount = 0;
+        var totalCount = 0;
+        transaction {
+            heartBeatMap.forEach { (id, lastActive) ->
+                totalCount += 1;
+                val updated = Connectors.update ({ Connectors.id eq UUID.fromString(id) }) { it ->
+                    it[Connectors.lastActive] = Instant.fromEpochMilliseconds(lastActive)
+                }
+                if (updated == 0) {
+                    heartBeatMap.remove(id)
+                }
+                updatedCount += updated
+            }
+        }
+
+        logger.info("Persisted $updatedCount out of $totalCount connectors' activity")
+    }
+
     private fun checkHeartBeatSignal() {
         val connectorIds = heartBeatMap.keys
-        val unhealthyConnector = connectorIds.filter { System.currentTimeMillis() - heartBeatMap[it]!! > 2 * 60 * 1000 }.map{ UUID.fromString(it) }
+        val unhealthyConnector = connectorIds.filter { System.currentTimeMillis() - heartBeatMap[it]!! > 5 * 60 * 1000 }.map{ UUID.fromString(it) }
 
         transaction {
             val rows = Connectors.deleteWhere { id.inList(unhealthyConnector) }
@@ -59,6 +82,12 @@ class RegistrationLoader {
 
     private fun loadRegistrationToMemory() {
         val data = ConnectorsHandler.aggregateConnectors()
+        data.forEach {
+            it.connectors.forEach { connector ->
+                heartBeatMap[connector.id] = connector.lastActive
+            }
+        }
+        checkHeartBeatSignal()
 
         registrationData.removeAll { true }
         registrationData.addAll(data)

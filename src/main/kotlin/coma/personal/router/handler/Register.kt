@@ -23,7 +23,7 @@ class RegisterHandler(
                 val id = Connectors.insertAndGetId {
                     it[appName] = result.appName
                     it[address] = result.address
-                    it[lastRegistered] = Instant.fromEpochMilliseconds(System.currentTimeMillis())
+                    it[lastActive] = Instant.fromEpochMilliseconds(System.currentTimeMillis())
                 }
 
                 registrationLoader.refresh()

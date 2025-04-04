@@ -4,6 +4,7 @@ import coma.personal.router.RegistrationLoader
 import io.muserver.MuHandler
 import io.muserver.MuRequest
 import io.muserver.MuResponse
+import jakarta.ws.rs.ServiceUnavailableException
 import jakarta.ws.rs.NotFoundException
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -74,7 +75,7 @@ class HttpProxyHandler(
 
             override fun onFailure(call: Call, e: IOException) {
                 logger.error("Error while proxying request $uri to $targetUri, message: ${e.message}")
-                asyncHandle.complete(e)
+                asyncHandle.complete(ServiceUnavailableException("Error while proxying request to $uri"))
             }
         })
         return true
