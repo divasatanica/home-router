@@ -32,6 +32,7 @@ class App {
             .addHandler(Method.POST, "/api/v1/register", RegisterHandler(registrationLoader))
             .addHandler(Method.POST, "/api/v1/unregister", UnregisterHandler(registrationLoader))
             .addHandler(Method.GET, "/api/v1/connectors", ConnectorsHandler())
+            .addHandler(Method.POST, "/api/v1/ping", PingHandler(registrationLoader))
             .addHandler(HttpProxyHandler(registrationLoader, client))
 
         logger.info("Server started on http://localhost:{}", port)

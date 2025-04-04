@@ -29,7 +29,7 @@ class UnregisterHandler(
         }
 
         transaction {
-            val deletedRow = Connectors.deleteWhere { Connectors.id.eq(UUID.fromString(body.id)) }
+            val deletedRow = Connectors.deleteWhere { id.eq(UUID.fromString(body.id)) }
             logger.info("Deleted row $deletedRow for id: ${body.id}")
 
             if (deletedRow == 0) {

@@ -3,7 +3,7 @@ package coma.personal.router.handler
 import io.muserver.MuHandler
 import io.muserver.MuRequest
 import io.muserver.MuResponse
-import kotlin.uuid.ExperimentalUuidApi
+import java.util.UUID
 
 const val INVALID_TRACE_ID_FORMAT = "00000000000000000000000000000000"
 const val INVALID_PARENT_ID_FORMAT = "0000000000000000"
@@ -32,8 +32,7 @@ class TraceContext: MuHandler {
         return false
     }
 
-    @OptIn(ExperimentalUuidApi::class)
     private fun generateBytes(bytes: Int = 16): String {
-        return kotlin.uuid.Uuid.random().toString().split("-").joinToString("").slice(IntRange(0, bytes * 2 - 1))
+        return UUID.randomUUID().toString().split("-").joinToString("").slice(IntRange(0, bytes * 2 - 1))
     }
 }
