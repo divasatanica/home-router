@@ -36,12 +36,10 @@ class RegisterHandler(
                         Connectors.appName eq resultAppName
                     }.andWhere {
                         Connectors.address eq resultAddress
-                    }.andWhere {
-                        Connectors.lastActive greaterEq fiveMinutesAgo
                     }
                     .limit(1)
                 var id: EntityID<UUID>
-                if (existingList.count() > 0) {
+                if (existingList.count() > 0 && existingList.first()[Connectors.lastActive]!! >= fiveMinutesAgo) {
                     id = existingList.first()[Connectors.id]
                     logger.info("Found existing connector with id: $id, reuse this connector")
                 } else {
