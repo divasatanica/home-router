@@ -29,11 +29,19 @@ class RegistrationLoader {
 
         // Check and refresh health of connectors every 60 seconds
         executor.scheduleWithFixedDelay({
-            loadRegistrationToMemory()
+            try {
+                loadRegistrationToMemory()
+            } catch (e: Exception) {
+                logger.error("Failed to load registration data", e)
+            }
         }, 60, 60, java.util.concurrent.TimeUnit.SECONDS)
         // Store latest activity of connectors every 2 minutes
         executor.scheduleWithFixedDelay({
-            persistConnectorsActivity()
+            try {
+                persistConnectorsActivity()
+            } catch (e: Exception) {
+                logger.error("Failed to persist connectors activity", e)
+            }
         }, 2 * 60, 2 * 60, java.util.concurrent.TimeUnit.SECONDS)
     }
 

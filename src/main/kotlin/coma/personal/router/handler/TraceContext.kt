@@ -26,8 +26,8 @@ class TraceContext: MuHandler {
 
         val flags = "01"
 
-        req.headers().set("transparent", "$version-$traceId-$parentId-$flags")
-        res.headers().set("transparent", "$version-$traceId-$parentId-$flags")
+        req.headers().set("traceparent", "$version-$traceId-$parentId-$flags")
+        res.headers().set("traceparent", "$version-$traceId-$parentId-$flags")
 
         return false
     }

@@ -15,11 +15,14 @@ class ConnectorsHandler: RouteHandler {
     override fun handle(req: MuRequest, res: MuResponse, p2: MutableMap<String, String>?) {
         val data = aggregateConnectors()
         val responseResult = object {
-            val data = data
+            val data = object {
+                val connectors = data
+            }
             val message = "Successfully fetched"
             val code = 0
         }
 
+        res.headers().set("Content-Type", "application/json")
         res.write(Gson().toJson(responseResult))
     }
 

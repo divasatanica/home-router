@@ -9,9 +9,8 @@ echo "Will build $BUILD_VERSION ..."
 # build jar package
 mvn clean package assembly:single
 
-docker build --build-arg VERSION="$BUILD_VERSION" -t router:$BUILD_VERSION .
+docker image rm router:latest
+docker build --build-arg VERSION="$BUILD_VERSION" -t router:latest .
 
 # restore local artifacts
 mvn clean install
-
-rm ./pom.xml.releaseBackup

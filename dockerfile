@@ -1,5 +1,5 @@
 # Use an official OpenJDK runtime as a parent image
-FROM openjdk:latest
+FROM openjdk:18
 
 ARG VERSION
 ENV JAR_VERSION=$VERSION
